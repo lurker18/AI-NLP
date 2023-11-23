@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-11-23T08:17:26.115Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0" etag="34b7ogzyV2j9G5sE1JZL" version="22.1.3" type="github">
+<mxfile host="app.diagrams.net" modified="2023-11-23T08:19:43.690Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0" etag="beCObbQss9YPHnY-bOk2" version="22.1.3" type="github">
   <diagram name="페이지-1" id="-8yun-3NOsmLTGrZwqc3">
     <mxGraphModel dx="2496" dy="1113" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -250,17 +250,17 @@
         <mxCell id="UXBK47Knyluay0lU5f_m-95" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-82">
           <mxGeometry y="161" width="702.916748046875" height="41" as="geometry" />
         </mxCell>
-        <mxCell id="UXBK47Knyluay0lU5f_m-96" value="ARLD" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-95">
+        <mxCell id="UXBK47Knyluay0lU5f_m-96" value="ARLD" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-95">
           <mxGeometry width="60" height="41" as="geometry">
             <mxRectangle width="60" height="41" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="UXBK47Knyluay0lU5f_m-97" value="Alcohol-related liver disease" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-95">
+        <mxCell id="UXBK47Knyluay0lU5f_m-97" value="Alcohol-related liver disease" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-95">
           <mxGeometry x="60" width="133" height="41" as="geometry">
             <mxRectangle width="133" height="41" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="UXBK47Knyluay0lU5f_m-98" value="&lt;font style=&quot;font-size: 13px;&quot; face=&quot;Times New Roman&quot;&gt;Alcohol-related liver disease (ARLD) refers to liver damage caused by excess alcohol intake.&amp;nbsp; There are several stages of severity and a range of associated symptoms.&lt;/font&gt;" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;align=left;" vertex="1" parent="UXBK47Knyluay0lU5f_m-95">
+        <mxCell id="UXBK47Knyluay0lU5f_m-98" value="&lt;font style=&quot;font-size: 13px;&quot;&gt;Alcohol-related liver disease (ARLD) refers to liver damage caused by excess alcohol intake.&amp;nbsp; There are several stages of severity and a range of associated symptoms.&lt;/font&gt;" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;align=left;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-95">
           <mxGeometry x="193" width="510" height="41" as="geometry">
             <mxRectangle width="510" height="41" as="alternateBounds" />
           </mxGeometry>
