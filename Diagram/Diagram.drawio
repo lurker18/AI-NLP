@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-11-23T10:49:53.583Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Whale/3.23.214.10 Safari/537.36" etag="aDD4pUPL6it8P7KJ_D0G" version="22.1.3" type="github">
+<mxfile host="app.diagrams.net" modified="2023-11-23T10:51:23.359Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="neTKG14vHRz6UIzwEKz0" version="22.1.3" type="github">
   <diagram name="페이지-1" id="-8yun-3NOsmLTGrZwqc3">
-    <mxGraphModel dx="2025" dy="1115" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="3188" dy="1570" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -370,10 +370,10 @@
             <mxRectangle width="112" height="25" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="DXwUp75bNK78d7WyVg1d-1" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="DXwUp75bNK78d7WyVg1d-1" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="651" y="344.62" width="630" height="321" as="geometry" />
         </mxCell>
-        <mxCell id="DXwUp75bNK78d7WyVg1d-2" value="&lt;font size=&quot;1&quot; face=&quot;Times New Roman&quot;&gt;&lt;b style=&quot;font-size: 18px;&quot;&gt;Task 2: Conversational Dialogue&lt;/b&gt;&lt;/font&gt;" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="DXwUp75bNK78d7WyVg1d-2" value="&lt;font size=&quot;1&quot; face=&quot;Times New Roman&quot;&gt;&lt;b style=&quot;font-size: 18px;&quot;&gt;Task 2: Conversational Dialogue&lt;/b&gt;&lt;/font&gt;" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="820.5" y="333.54" width="291" height="30" as="geometry" />
         </mxCell>
       </root>
