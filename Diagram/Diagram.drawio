@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-11-23T08:26:29.233Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0" etag="PuY3wDTF48B2Zr5EhxGl" version="22.1.3" type="github">
+<mxfile host="app.diagrams.net" modified="2023-11-23T08:56:17.626Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0" etag="kKR70NeKh_xG6qPWS3N2" version="22.1.3" type="github">
   <diagram name="페이지-1" id="-8yun-3NOsmLTGrZwqc3">
     <mxGraphModel dx="2496" dy="1113" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -191,7 +191,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="UXBK47Knyluay0lU5f_m-82" value="Dictionary of Abbreviations" style="shape=table;startSize=30;container=1;collapsible=0;childLayout=tableLayout;fontSize=18;fillColor=#dae8fc;strokeColor=#6c8ebf;gradientColor=none;swimlaneFillColor=default;fontFamily=Times New Roman;fontStyle=1" vertex="1" parent="1">
-          <mxGeometry x="-389" y="-15" width="702.916748046875" height="276.8340148925781" as="geometry" />
+          <mxGeometry x="-389" y="-15" width="702.916748046875" height="279.2507019042969" as="geometry" />
         </mxCell>
         <mxCell id="UXBK47Knyluay0lU5f_m-83" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-82">
           <mxGeometry y="30" width="702.916748046875" height="28" as="geometry" />
@@ -232,17 +232,17 @@
         <mxCell id="UXBK47Knyluay0lU5f_m-91" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-82">
           <mxGeometry y="111" width="702.916748046875" height="56" as="geometry" />
         </mxCell>
-        <mxCell id="UXBK47Knyluay0lU5f_m-92" value="AC" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-91">
+        <mxCell id="UXBK47Knyluay0lU5f_m-92" value="ARLD" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-91">
           <mxGeometry width="60" height="56" as="geometry">
             <mxRectangle width="60" height="56" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="UXBK47Knyluay0lU5f_m-93" value="Acute cholecystitis" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-91">
+        <mxCell id="UXBK47Knyluay0lU5f_m-93" value="Alcohol-related liver disease" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-91">
           <mxGeometry x="60" width="133" height="56" as="geometry">
             <mxRectangle width="133" height="56" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="UXBK47Knyluay0lU5f_m-94" value="&lt;font style=&quot;font-size: 13px;&quot;&gt;Acute cholecystitis is swelling (inflammation) of the gallbladder.&amp;nbsp; It is a potentially serious condition that usually needs to be treated in hospital.&lt;/font&gt;" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=15;fontFamily=Times New Roman;align=left;" vertex="1" parent="UXBK47Knyluay0lU5f_m-91">
+        <mxCell id="UXBK47Knyluay0lU5f_m-94" value="&lt;font style=&quot;font-size: 13px;&quot;&gt;Alcohol-related liver disease (ARLD) refers to liver damage caused by excess alcohol intake.&amp;nbsp; There are several stages of severity and a range of associated symptoms.&lt;/font&gt;" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=15;fontFamily=Times New Roman;align=left;" vertex="1" parent="UXBK47Knyluay0lU5f_m-91">
           <mxGeometry x="193" width="510" height="56" as="geometry">
             <mxRectangle width="510" height="56" as="alternateBounds" />
           </mxGeometry>
@@ -250,44 +250,101 @@
         <mxCell id="UXBK47Knyluay0lU5f_m-95" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-82">
           <mxGeometry y="167" width="702.916748046875" height="57" as="geometry" />
         </mxCell>
-        <mxCell id="UXBK47Knyluay0lU5f_m-96" value="ARLD" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-95">
+        <mxCell id="UXBK47Knyluay0lU5f_m-96" value="..." style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-95">
           <mxGeometry width="60" height="57" as="geometry">
             <mxRectangle width="60" height="57" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="UXBK47Knyluay0lU5f_m-97" value="Alcohol-related liver disease" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-95">
+        <mxCell id="UXBK47Knyluay0lU5f_m-97" value="..." style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-95">
           <mxGeometry x="60" width="133" height="57" as="geometry">
             <mxRectangle width="133" height="57" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="UXBK47Knyluay0lU5f_m-98" value="&lt;font style=&quot;font-size: 13px;&quot;&gt;Alcohol-related liver disease (ARLD) refers to liver damage caused by excess alcohol intake.&amp;nbsp; There are several stages of severity and a range of associated symptoms.&lt;/font&gt;" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;align=left;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-95">
+        <mxCell id="UXBK47Knyluay0lU5f_m-98" value="..." style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;align=center;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-95">
           <mxGeometry x="193" width="510" height="57" as="geometry">
             <mxRectangle width="510" height="57" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
         <mxCell id="UXBK47Knyluay0lU5f_m-99" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-82">
-          <mxGeometry y="224" width="702.916748046875" height="53" as="geometry" />
+          <mxGeometry y="224" width="702.916748046875" height="55" as="geometry" />
         </mxCell>
-        <mxCell id="UXBK47Knyluay0lU5f_m-100" value="AS" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-99">
-          <mxGeometry width="60" height="53" as="geometry">
-            <mxRectangle width="60" height="53" as="alternateBounds" />
+        <mxCell id="UXBK47Knyluay0lU5f_m-100" value="UTI" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-99">
+          <mxGeometry width="60" height="55" as="geometry">
+            <mxRectangle width="60" height="55" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="UXBK47Knyluay0lU5f_m-101" value="Ankylosing spondylitis" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-99">
-          <mxGeometry x="60" width="133" height="53" as="geometry">
-            <mxRectangle width="133" height="53" as="alternateBounds" />
+        <mxCell id="UXBK47Knyluay0lU5f_m-101" value="Urinary tract infection" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-99">
+          <mxGeometry x="60" width="133" height="55" as="geometry">
+            <mxRectangle width="133" height="55" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="UXBK47Knyluay0lU5f_m-102" value="&lt;font style=&quot;font-size: 13px;&quot;&gt;Ankylosing spondylitis (AS) is a long-term (chronic) condition in which the spine and other areas of the body become inflamed. The symptoms of AS can vary but usually involve&lt;/font&gt;" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;align=left;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-99">
-          <mxGeometry x="193" width="510" height="53" as="geometry">
-            <mxRectangle width="510" height="53" as="alternateBounds" />
+        <mxCell id="UXBK47Knyluay0lU5f_m-102" value="Urinary tract infections (UTIs) in children are fairly common, but not usually serious.&amp;nbsp; They can be effectively treated with antibiotics.&amp;nbsp;" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=13;align=left;fontFamily=Times New Roman;" vertex="1" parent="UXBK47Knyluay0lU5f_m-99">
+          <mxGeometry x="193" width="510" height="55" as="geometry">
+            <mxRectangle width="510" height="55" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
         <mxCell id="UXBK47Knyluay0lU5f_m-104" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="-352.54" y="372" width="630" height="258" as="geometry" />
+          <mxGeometry x="-29" y="339.08" width="630" height="321" as="geometry" />
         </mxCell>
         <mxCell id="UXBK47Knyluay0lU5f_m-105" value="&lt;font size=&quot;1&quot; face=&quot;Times New Roman&quot;&gt;&lt;b style=&quot;font-size: 18px;&quot;&gt;Task 1: Named Entity Recognition&lt;/b&gt;&lt;/font&gt;" style="text;html=1;strokeColor=default;fillColor=default;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="-183.04000000000002" y="354" width="291" height="30" as="geometry" />
+          <mxGeometry x="140.5" y="328" width="291" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UXBK47Knyluay0lU5f_m-107" value="List of Categories" style="shape=table;startSize=30;container=1;collapsible=0;childLayout=tableLayout;strokeColor=#d79b00;fontSize=16;fontFamily=Times New Roman;fontStyle=1;fillColor=#ffe6cc;" vertex="1" parent="1">
+          <mxGeometry x="469" y="-28" width="334" height="297.83" as="geometry" />
+        </mxCell>
+        <mxCell id="UXBK47Knyluay0lU5f_m-108" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-107">
+          <mxGeometry y="30" width="334" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="UXBK47Knyluay0lU5f_m-109" value="" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-108">
+          <mxGeometry width="111" height="90" as="geometry">
+            <mxRectangle width="111" height="90" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UXBK47Knyluay0lU5f_m-110" value="" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-108">
+          <mxGeometry x="111" width="112" height="90" as="geometry">
+            <mxRectangle width="112" height="90" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UXBK47Knyluay0lU5f_m-111" value="" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-108">
+          <mxGeometry x="223" width="111" height="90" as="geometry">
+            <mxRectangle width="111" height="90" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UXBK47Knyluay0lU5f_m-112" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-107">
+          <mxGeometry y="120" width="334" height="88" as="geometry" />
+        </mxCell>
+        <mxCell id="UXBK47Knyluay0lU5f_m-113" value="" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-112">
+          <mxGeometry width="111" height="88" as="geometry">
+            <mxRectangle width="111" height="88" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UXBK47Knyluay0lU5f_m-114" value="" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-112">
+          <mxGeometry x="111" width="112" height="88" as="geometry">
+            <mxRectangle width="112" height="88" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UXBK47Knyluay0lU5f_m-115" value="" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-112">
+          <mxGeometry x="223" width="111" height="88" as="geometry">
+            <mxRectangle width="111" height="88" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UXBK47Knyluay0lU5f_m-116" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-107">
+          <mxGeometry y="208" width="334" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="UXBK47Knyluay0lU5f_m-117" value="" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-116">
+          <mxGeometry width="111" height="90" as="geometry">
+            <mxRectangle width="111" height="90" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UXBK47Knyluay0lU5f_m-118" value="" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-116">
+          <mxGeometry x="111" width="112" height="90" as="geometry">
+            <mxRectangle width="112" height="90" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UXBK47Knyluay0lU5f_m-119" value="" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="UXBK47Knyluay0lU5f_m-116">
+          <mxGeometry x="223" width="111" height="90" as="geometry">
+            <mxRectangle width="111" height="90" as="alternateBounds" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
