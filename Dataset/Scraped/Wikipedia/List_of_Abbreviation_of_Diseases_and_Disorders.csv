@@ -1,12 +1,12 @@
 ﻿Acronyms,Diseases
 AAA,Abdominal aortic aneurysm
 AAS,Aarskog–Scott syndrome
-ABCD syndrome,"Albinism, black lock, cell migration disorder"
+ABCD syndrome,"Albinism, black_lock, cell_migration disorder syndrome"
 ABPA,Allergic bronchopulmonary aspergillosis
 ACC,Agenesis of the corpus callosum
 ACS,Acute coronary syndrome
 ACTH deficiency,Adrenocorticotropic hormone deficiency
-ACUG,Arthrocutaneouveal granulomatosis (see Blau syndrome)
+ACUG,Arthrocutaneouveal granulomatosis
 ACVD,Atherosclerotic cardiovascular disease
 AD,Alzheimer's disease
 AD,Attachment disorder
@@ -15,7 +15,7 @@ ADD-RT,Attention deficit disorder – residual type
 ADEM,Acute disseminated encephalomyelitis
 ADHD,Attention deficit hyperactivity disorder
 AERD,Aspirin exacerbated respiratory disease
-AF or A-fib,Atrial fibrillation
+AF,Atrial fibrillation
 AGS,Aicardi–Goutières syndrome
 AH,Acquired hemophilia
 AHA,Acquired hemophilia A
@@ -24,10 +24,10 @@ AHC,Alternating hemiplegia of childhood
 AHF,Alkhurma hemorrhagic fever
 AIDS,Acquired immune deficiency syndrome
 AIP,Acute intermittent porphyria
-ALA DD,Doss porphyria/ALA dehydratase deficiency/Plumboporphyria (the disease is known by multiple names)
+ALA DD,ALA dehydratase deficiency
 ALD,Alcoholic liver disease
 ALI,Acute lung injury
-ALL,"Acute lymphoblastic lymphoma, acute lymphocytic leukemia"
+ALL,Acute lymphocytic leukemia
 ALS,Amyotrophic lateral sclerosis
 AMD,Age-related macular degeneration
 AML,Acute myelogenous leukemia
@@ -53,16 +53,16 @@ A-T,Ataxia-telangiectasia
 AVMs,Arteriovenous malformations
 BA,Bronchial Asthma
 BBS,Bardet-Biedl syndrome
-BBS,Bashful bladder syndrome (see paruresis)
+BBS,Bashful bladder syndrome
 BEB,Benign essential blepharospasm
 BD,Behçet disease
 BD,Binswanger's disease
-BEH,Behaviorally/emotionally handicapped
+BEH,Behaviorally emotionally handicapped
 BH,Behaviorally handicapped
 BL,Burkitt lymphoma
 BMD,Becker's muscular dystrophy
 BPAD,Bipolar affective disorder
-BPD,Borderline personality disorder (often misattributed to bipolar disorder)
+BPD,Borderline personality disorder
 BPH,Benign prostatic hyperplasia
 BRBNS,Blue rubber bleb nevus syndrome
 BRIC1,Benign recurrent intrahepatic cholestasis 1
@@ -93,7 +93,7 @@ CFIDS,Chronic fatigue immune dysfunction syndrome
 CFS,Chronic fatigue syndrome
 CGBD,Corticobasal ganglionic degeneration
 CH,Cluster headache
-CHARGE syndrome,"Coloboma of the eye, heart defects, atresia of the nasal choanae, retarded growth & or development, genital abnormalities, ear abnormalities"
+CHARGE syndrome,"Coloboma_of_the_eye, heart_defects, atresia_of_the_nasal_choanae, retarded_growth_development, genital_abnormalities, ear_abnormalities syndrome"
 CHD,Congenital heart disease
 CHD,Congenital hip dysplasia
 CHD,Coronary heart disease
@@ -103,7 +103,7 @@ CIPA,Congenital insensitivity to pain with anhidrosis
 CIP,Congenital insensitivity to pain
 CJD,Creutzfeldt–Jakob disease
 CKD,Chronic kidney disease
-CLOVES syndrome,"Congenital lipomatous overgrowth, vascular malformations, epidermal nevi, and skeletal/spinal abnormalities syndrome"
+CLOVES syndrome,"Congenital lipomatous overgrowth, vascular_malformations, epidermal_nevi, and skeletal_abnormalities syndrome"
 CML,Chronic myelogenous leukemia
 CMs,Chiari malformations
 CMT disease,Charcot–Marie–Tooth disease
@@ -152,7 +152,7 @@ DJD,Degenerative joint disease
 DLB,Dementia with Lewy bodies
 DM,Diabetes mellitus
 DMD,Duchenne muscular dystrophy
-DP,Doss porphyria/ALA dehydratase deficiency/Plumboporphyria
+DP,Doss porphyria
 DPT,"Diphtheria, pertussis, tetanus"
 DRSP disease,Drug-resistant Streptococcus pneumoniae disease
 DS,Down syndrome
@@ -257,8 +257,8 @@ KS,Kawasaki syndrome
 KSS,Kearns–Sayre syndrome
 KTS,Klippel–Trénaunay syndrome
 KTW Syndrome,Klippel–Trénaunay–Weber syndrome
-LCM,Lymphocytic choriomeningitis
-LD(s),Learning disabilities/difficulties/differences/disorder
+LCM,Lymphocytic chorio meningitis
+LD(s),Learning disabilities
 LD,Legionnaires' disease
 LEMS,Lambert–Eaton myasthenic syndrome
 LFA,Low-functioning autism
@@ -266,7 +266,7 @@ LGV,Lymphogranuloma venereum
 LKS,Landau–Kleffner syndrome
 LNS,Lesch–Nyhan syndrome
 LP,Lipoid proteinosis
-LP,Little person/people (see dwarfism)
+LP,Little person/people
 LPR,Laryngopharyngeal Reflux
 LUHF,Lujo Hemorrhagic Fever
 MAC,Mycobacterium avium complex
@@ -379,7 +379,7 @@ SB,Spina bifida
 SBMD,Sensory-based motor disorder
 SBS,Shaken baby syndrome
 SC,Sydenham chorea
-SD,Saint Vitus's dance (see Sydenham chorea)
+SD,Saint Vitus's dance
 SDD,Sensory discrimination disorder
 SDS,Sudden death syndrome
 SHF,Systolic heart failure
@@ -423,7 +423,7 @@ TSEs,Transmissible spongiform encephalopathies
 TSP,Tropical spastic paraparesis
 TTH,Tension type headache
 TTP,Thrombotic thrombocytopenic purpura
-UCPPS,Urologic Chronic Pelvic Pain Syndrome (IC/BPS + CP/CPPS)
+UCPPS,Urologic Chronic Pelvic Pain Syndrome
 UCD,Unicentric Castleman disease
 UDA,Urticaria-deafness-amyloidosis
 UFS,Urofacial syndrome
@@ -460,7 +460,7 @@ XDR TB,Extensively drug-resistant tuberculosis
 XHED,X-linked hypohidrotic ectodermal dysplasia
 XLMTM,X-linked myotubular myopathy
 XLOS,X-linked Opitz G/BBB syndrome
-XLP syndrome,X-linked lymphoproliferative syndrome (see Duncan Disease)
+XLP syndrome,X-linked lymphoproliferative syndrome
 XLSA,X-linked sideroblastic anemia
 XMEA,X-linked myopathy with excessive autophagy
 XMEN,"X-linked immunodeficiency with magnesium defect, Epstein-Barr virus infection and neoplasia"
