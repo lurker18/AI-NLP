@@ -8,7 +8,7 @@ from torch import cuda
 
 device = 'cuda' if cuda.is_available() else 'cpu'
 
-data_folder = 'F:/BioNER-Abbrev/Dataset/Scraped/nhsinform/'
+data_folder = './Dataset/Scraped/nhsinform/'
 
 df = pd.read_csv(data_folder + 'nhsinform-IOB - Modified.txt', 
                  sep = '\t', 
@@ -30,8 +30,6 @@ df['Annotation'] = df['Annotation'].astype('string')
 df['sentence'] = df[['Sentence #', 'Word', 'Annotation']].groupby(['Sentence #'])['Word'].transform(lambda x : ' '.join(x))
 # Also, create a new column called 'word_labels' which groups the tags by sentence
 df['word_labels'] = df[['Sentence #', 'Word', 'Annotation']].groupby(['Sentence #'])['Annotation'].transform(lambda x : ','.join(x))
-df
-
 
 df = df[['sentence', 'word_labels']].drop_duplicates().reset_index(drop = True)
 
