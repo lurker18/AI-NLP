@@ -10,11 +10,13 @@ device = 'cuda' if cuda.is_available() else 'cpu'
 
 data_folder = './Dataset/Scraped/nhsinform/'
 
-df = pd.read_csv(data_folder + 'nhsinform-IOB - Modified.txt', 
+df = pd.read_csv(data_folder + 'nhsinform-IOB - Modified - Copy.txt', 
                  sep = '\t', 
                  header = None,
                  names = ['Word', 'Annotation']
                  )
+df.fillna
+
 
 # Add a temporary 'sentence #' column for creating a joined words of sentences
 df['Sentence #'] = 'Sentence: 1'
