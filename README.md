@@ -1,1 +1,1 @@
-# BioNER-Abbrev
+# Bio_Relation_Extraction
