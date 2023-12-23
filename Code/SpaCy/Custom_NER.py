@@ -281,6 +281,13 @@ for epoch in range(epochs):
     print(f"Training epoch: {epoch + 1}")
     train(epoch)
 
+# Validate the model
+labels, predictions = valid(model, testing_loader)
+
+# Evaluate the Metrics
+from seqeval.metrics import classification_report
+print(classification_report(labels, predictions))
+
 # Inference Phase
 sentence = "Anaphylaxis is a severe, potentially life-threatening allergic reaction that can develop rapidly. It is also known as anaphylactic shock."
 model.eval()
