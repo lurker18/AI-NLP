@@ -1,0 +1,11 @@
+- text: "An abdominal aortic aneurysm (AAA) is a swelling (aneurysm) of the aorta the main blood vessel that leads away from the heart, down through the abdomen to the rest of the body."
+  entities:
+    DISEASE: ['abdominal aortic aneurysm (AAA)']
+
+- text: "Leukaemia is cancer of the white blood cells. Acute leukaemia means the condition progresses rapidly and aggressively and requires immediate treatment. Acute leukaemia is classified according to the type of white blood cells affected by cancer."
+  entities:
+    DISEASE: ['Leukaemia']
+
+- text: "Addison's disease (also known as primary adrenal insufficiency or hypoadrenalism) is a rare disorder of the adrenal glands. The adrenal glands are two small glands that sit on top of the kidneys. They produce essential hormones: cortisol, aldosterone and adrenaline. In Addison's disease, the adrenal gland is damaged, and not enough cortisol and aldosterone are produced. About 8,400 people in the UK have Addison's disease."
+  entities:
+    DISEASE: ["Addison's disease"]
