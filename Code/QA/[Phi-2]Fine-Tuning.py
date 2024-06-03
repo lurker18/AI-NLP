@@ -1,5 +1,4 @@
 import os
-from typing import Optional
 import pandas as pd
 import json
 import warnings
@@ -7,7 +6,7 @@ import warnings
 import torch
 from datasets import load_dataset
 from peft import LoraConfig
-from transformers import (AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, HfArgumentParser, AutoTokenizer, TrainingArguments,)
+from transformers import (AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, AutoTokenizer, TrainingArguments,)
 from tqdm import tqdm
 from trl import SFTTrainer
 
