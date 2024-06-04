@@ -1,4 +1,5 @@
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import pandas as pd
 import json
 import warnings
@@ -10,7 +11,6 @@ from transformers import (AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfi
 from tqdm import tqdm
 from trl import SFTTrainer
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["WANDB_DISABLED"] = "true"
 warnings.filterwarnings("ignore")
 

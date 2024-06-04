@@ -1,4 +1,5 @@
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 from typing import Optional
 import pandas as pd
 import json
@@ -12,7 +13,6 @@ from tqdm import tqdm
 import tensorrt as trt
 from trl import SFTTrainer
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["WANDB_DISABLED"] = "true"
 warnings.filterwarnings("ignore")
 
@@ -58,8 +58,9 @@ model = AutoModelForCausalLM.from_pretrained(
     quantization_config = bnb_config,
     attn_implementation = "flash_attention_2",
     torch_dtype = torch.bfloat16,
-    device_map = 'auto',
+    device_map = "auto",
     use_auth_token = False,
+    use_safetensors = True,
 )
 model.config.use_cache = False
 model.config.pretraining_tp = 1
