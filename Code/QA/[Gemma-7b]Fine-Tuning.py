@@ -1,4 +1,5 @@
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import pandas as pd
 import json
 import warnings
@@ -11,7 +12,6 @@ from tqdm import tqdm
 import tensorrt as trt
 from trl import SFTTrainer
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["WANDB_DISABLED"] = "true"
 warnings.filterwarnings("ignore")
 
@@ -42,7 +42,7 @@ def formatting_func(example):
     return text
 
 def generate_and_tokenize_prompt(prompt):
-    return tokenizer(formatting_func(prompt), truncation = "max_length", padding = "max_length")
+    return tokenizer(formatting_func(prompt), truncation = True, padding = "max_length")
 
 # 3. Set the quantization settings
 bnb_config = BitsAndBytesConfig(
@@ -75,7 +75,7 @@ peft_config = LoraConfig(
 model = get_peft_model(model, peft_config)
 
 # 4.1 Select the tokenizer
-tokenizer = AutoTokenizer.from_pretrained(base_folder + "gemma-7b-Instruct", truncation = "max_length", padding = "max_length")
+tokenizer = AutoTokenizer.from_pretrained(base_folder + "gemma-7b-Instruct", truncation = True, padding = "max_length")
 tokenizer.padding_side = 'right'
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.add_eos_token = True
@@ -107,7 +107,7 @@ trainer = SFTTrainer(
     train_dataset = dataset,
     peft_config = peft_config,
     dataset_text_field = "text",
-    max_seq_length = 512,
+    max_seq_length = 2048,
     tokenizer = tokenizer,
     args = training_arguments,
     packing = False,

@@ -16,7 +16,7 @@ from trl import SFTTrainer
 os.environ["WANDB_DISABLED"] = "true"
 warnings.filterwarnings("ignore")
 
-base_folder = "E:/HuggingFace/models/MetaAI/"
+base_folder = "/media/lurker18/HardDrive/HuggingFace/models/MetaAI/"
 
 # 1. Load the Dataset
 df = pd.read_csv("Dataset/MedQuAD.csv")
@@ -43,7 +43,7 @@ def formatting_func(example):
     return text
 
 def generate_and_tokenize_prompt(prompt):
-    return tokenizer(formatting_func(prompt), padding = "max_length" , truncation = "max_length")
+    return tokenizer(formatting_func(prompt), padding = "max_length" , truncation = True)
 
 # 3. Set the quantization settings
 bnb_config = BitsAndBytesConfig(
@@ -57,8 +57,7 @@ bnb_config = BitsAndBytesConfig(
 model = AutoModelForCausalLM.from_pretrained(
     base_folder + "/Llama_3_8B_Instruct",
     quantization_config = bnb_config,
-    #attn_implementation = "flash_attention_2",
-    attn_implementation = 'eager',
+    attn_implementation = "flash_attention_2",
     torch_dtype = torch.float16,
     device_map = "auto",
     use_auth_token = False,
@@ -77,7 +76,7 @@ peft_config = LoraConfig(
 model = get_peft_model(model, peft_config)
 
 # 4.1 Select the tokenizer
-tokenizer = AutoTokenizer.from_pretrained(base_folder + "/Llama_3_8B_Instruct", padding = "max_length" , truncation = "max_length")
+tokenizer = AutoTokenizer.from_pretrained(base_folder + "/Llama_3_8B_Instruct", padding = "max_length" , truncation = True)
 tokenizer.padding_side = 'right' # to prevent warnings
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.add_eos_token = True
@@ -108,7 +107,7 @@ trainer = SFTTrainer(
     train_dataset = dataset,
     peft_config = peft_config,
     dataset_text_field = "text",
-    max_seq_length = None,
+    max_seq_length = 2048,
     tokenizer = tokenizer,
     args = training_arguments,
     packing = False,

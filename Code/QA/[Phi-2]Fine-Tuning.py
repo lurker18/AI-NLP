@@ -14,7 +14,7 @@ from trl import SFTTrainer
 os.environ["WANDB_DISABLED"] = "true"
 warnings.filterwarnings("ignore")
 
-base_folder = "E:/HuggingFace/models/Microsoft/Phi/"
+base_folder = "/media/lurker18/HardDrive/HuggingFace/models/Microsoft/Phi"
 
 # 1. Load the Dataset
 df = pd.read_csv("Dataset/MedQuAD.csv")
@@ -32,7 +32,7 @@ result.append('}')
 result = ''.join(result)
 result = result.strip('"\'')
 result = json.loads(result)
-with open("Dataset/data.json", 'w') as json_file:
+with open("Dataset/data-phi2.json", 'w') as json_file:
     json.dump(result, json_file)
 
 # 2. Preset the the Instruction-based prompt template
@@ -53,7 +53,7 @@ bnb_config = BitsAndBytesConfig(
 
 # 4. Select the Microsoft's Phi-2 model
 model = AutoModelForCausalLM.from_pretrained(
-    base_folder + "Phi-2",
+    base_folder + "/Phi-2",
     quantization_config = bnb_config,
     device_map = 'auto',
     use_auth_token = False,
@@ -68,7 +68,7 @@ peft_config = LoraConfig(
 )
 
 # 4.1 Select the tokenizer
-tokenizer = AutoTokenizer.from_pretrained(base_folder + "Phi-2", truncation = True, padding = True)
+tokenizer = AutoTokenizer.from_pretrained(base_folder + "/Phi-2", truncation = True, padding = True)
 tokenizer.pad_token = tokenizer.eos_token
 
 training_arguments = TrainingArguments(
@@ -90,7 +90,7 @@ training_arguments = TrainingArguments(
 
 model.config.use_cache = False
 
-dataset = load_dataset("json", data_files = "Dataset/data.json", field = "json", split = "train")
+dataset = load_dataset("json", data_files = "Dataset/data-phi2.json", field = "json", split = "train")
 dataset = medquad.map(generate_and_tokenize_prompt)
 
 # 5. Training the model
@@ -119,8 +119,8 @@ print(''.join(text))
 
 # Non-Fine-tuned Phi-2 model performance
 torch.set_default_device("cuda")
-model_test = AutoModelForCausalLM.from_pretrained(base_folder + "Phi-2", torch_dtype = "auto")
-tokenizer = AutoTokenizer.from_pretrained(base_folder + "Phi-2", truncation = True, padding = True)
+model_test = AutoModelForCausalLM.from_pretrained(base_folder + "/Phi-2", torch_dtype = "auto")
+tokenizer = AutoTokenizer.from_pretrained(base_folder + "/Phi-2", truncation = True, padding = True)
 inputs = tokenizer('''Question: What is (are) Trigeminal Neuralgia ?\n Output:''', return_tensors = 'pt', return_attention_mask = False)
 outputs = model_test.generate(**inputs, max_length = 100)
 text = tokenizer.batch_decode(outputs)[0]
