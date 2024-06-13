@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 from typing import Optional
 import pandas as pd
 import re
@@ -18,7 +18,7 @@ from trl import SFTTrainer
 os.environ["WANDB_DISABLED"] = "true"
 warnings.filterwarnings("ignore")
 
-base_folder = "E:/HuggingFace/models/MetaAI/"
+base_folder = "E:/HuggingFace/models/TII/"
 
 # 1. Load the Dataset
 dataset = load_dataset("bigbio/med_qa")
@@ -55,7 +55,6 @@ def generate_prompt(x):
 def generate_and_tokenize_prompt(prompt):
     return tokenizer(generate_prompt(prompt), padding = "max_length", truncation = True, max_length = 2048)
 
-
 def convert_format_df(data):
     data_extracted = [
     {'question' : variable['question'], 
@@ -81,18 +80,19 @@ test_df, test_hf = convert_format_df(test_data)
 bnb_config = BitsAndBytesConfig(
     load_in_4bit = True,
     bnb_4bit_quant_type = "nf4",
-    bnb_4bit_compute_dtype = torch.float16,
-    bnb_4bit_use_double_quant = True,
+    bnb_4bit_compute_dtype = torch.bfloat16,
+    bnb_4bit_use_double_quant = False,
 )
 
-# 4. Select the MetaAI's Llama3-8B-Instruct model
+# 4. Select the MistralAI's Mistral-7B-Instruct model
 model = AutoModelForCausalLM.from_pretrained(
-    base_folder + "Llama_3_8B_Instruct",
+    base_folder + "Falcon-7B-Instruct",
     quantization_config = bnb_config,
     #attn_implementation = "flash_attention_2",
-    torch_dtype = torch.float16,
+    torch_dtype = torch.bfloat16,
     device_map = "auto",
     use_auth_token = False,
+    trust_remote_code = True,
 )
 model.config.use_cache = False
 model.config.pretraining_tp = 1
@@ -104,35 +104,36 @@ peft_config = LoraConfig(
     r = 16,
     bias = "none",
     task_type = "CAUSAL_LM",
-    target_modules = ['up_proj', 'down_proj', 'gate_proj', 'k_proj', 'q_proj', 'v_proj', 'o_proj']
+    target_modules = ["query_key_value", "dense", "dense_h_to_4h", "dense_4h_to_h"]
 )
 model = get_peft_model(model, peft_config)
 
 # 4.1 Select the tokenizer
-tokenizer = AutoTokenizer.from_pretrained(base_folder + "Llama_3_8B_Instruct", padding = "max_length" , truncation = True)
-tokenizer.padding_side = 'right' # to prevent warnings
+tokenizer = AutoTokenizer.from_pretrained(base_folder + "Falcon-7B-Instruct", 
+                                          padding = "max_length", 
+                                          truncation = True, 
+                                          max_length = 2048)
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.add_eos_token = True
 
 training_arguments = TrainingArguments(
-    output_dir = "./Results/TEST-Llama3",
+    output_dir = "./Results/MedQA/Falcon-7b-Instruct",
     num_train_epochs = 4,
     per_device_train_batch_size = 8,
     gradient_accumulation_steps = 1,
-    optim = "paged_adamw_32bit",
+    optim = "paged_adamw_8bit",
     save_strategy = "epoch",
     logging_steps = 100,
     logging_strategy = "steps",
     learning_rate = 2e-4,
     bf16 = False,
     fp16 = False, 
+    max_grad_norm = 0.3,
+    lr_scheduler_type = "constant",
     group_by_length = True,
     disable_tqdm = False,
     report_to = None
 )
-
-#dataset = load_dataset("json", data_files = "Dataset/data-mistral.json", field = "json", split = "train")
-#dataset = dataset.map(generate_and_tokenize_prompt)
 
 # 5. Training the model
 trainer = SFTTrainer(
@@ -149,12 +150,11 @@ trainer = SFTTrainer(
 
 trainer.train()
 
-# 6. Test and compare the non-fine-tuned model against the fine-tuned Llama3-8B's model
-
+# 6. Test and compare the non-fine-tuned model against the fine-tuned MistralAI's model
 import tqdm
 
-# Load the best checkpoint of Llama3-8B-Instruct
-model_id = 'Results\TEST-Llama3\checkpoint-16408'
+# Load the best checkpoint of Mistral-7B-Instruct
+model_id = 'Results\MedQA\Falcon-7b-Instruct\checkpoint-5092'
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 model = AutoPeftModelForCausalLM.from_pretrained(
     model_id,
@@ -188,6 +188,12 @@ for i in tqdm.tqdm(range(0, len(test_prompts), 16)):
         ans_option.append(re.search(r'Answer: \s*(.*)', text).group(1))
     all_answers.extend(ans_option)
 
+all_answers_1 = [re.sub(r'</s>|://|</s|</|s>|s/|.swing', '', answers) for answers in all_answers]
+url_pattern = r'\b\S*\.com\S*|\b\S*\.gov\S*|\b\S*\.org\S*|\b\S*\.jpg'
+all_answers_2 = [re.sub(url_pattern, '', answers) for answers in all_answers_1]
+all_answers_3 = [answers.strip() for answers in all_answers_2]
+all_answers_3
+
 
 # 8. Score for the accuracy on Test set
 correct_answers = []
@@ -206,6 +212,6 @@ for i in range(len(test_df)):
 
 correct_count = 0
 for i in range(len(test_df)):
-    correct_count += correct_answers[i] == all_answers[i]
+    correct_count += correct_answers[i] == all_answers_3[i]
 
 correct_count/len(test_df)

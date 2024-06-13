@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 from typing import Optional
 import pandas as pd
 import re
@@ -18,7 +18,7 @@ from trl import SFTTrainer
 os.environ["WANDB_DISABLED"] = "true"
 warnings.filterwarnings("ignore")
 
-base_folder = "E:/HuggingFace/models/MistralAI/"
+base_folder = "E:/HuggingFace/models/MetaAI/"
 
 # 1. Load the Dataset
 dataset = load_dataset("bigbio/med_qa")
@@ -81,18 +81,18 @@ test_df, test_hf = convert_format_df(test_data)
 bnb_config = BitsAndBytesConfig(
     load_in_4bit = True,
     bnb_4bit_quant_type = "nf4",
-    bnb_4bit_use_double_quant = False,
+    bnb_4bit_compute_dtype = torch.float16,
+    bnb_4bit_use_double_quant = True,
 )
 
-# 4. Select the MistralAI's Mistral-7B-Instruct model
+# 4. Select the MetaAI's Llama3-8B-Instruct model
 model = AutoModelForCausalLM.from_pretrained(
-    base_folder + "Mistral-7B-Instruct-v0.2",
+    base_folder + "Llama_3_8B_Instruct",
     quantization_config = bnb_config,
     #attn_implementation = "flash_attention_2",
-    torch_dtype = torch.bfloat16,
+    torch_dtype = torch.float16,
     device_map = "auto",
-    use_auth_token = True,
-    use_safetensors = True,
+    use_auth_token = False,
 )
 model.config.use_cache = False
 model.config.pretraining_tp = 1
@@ -104,20 +104,20 @@ peft_config = LoraConfig(
     r = 16,
     bias = "none",
     task_type = "CAUSAL_LM",
-    target_modules = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj", "lm_head",]
+    target_modules = ['up_proj', 'down_proj', 'gate_proj', 'k_proj', 'q_proj', 'v_proj', 'o_proj']
 )
 model = get_peft_model(model, peft_config)
 
 # 4.1 Select the tokenizer
-tokenizer = AutoTokenizer.from_pretrained(base_folder + "/Mistral-7B-Instruct-v0.2", padding = "max_length", truncation = True, max_length = 2048)
-tokenizer.pad_token = tokenizer.unk_token
-tokenizer.pad_token_id =  tokenizer.unk_token_id
-tokenizer.padding_side = 'left' # to prevent warnings
+tokenizer = AutoTokenizer.from_pretrained(base_folder + "Llama_3_8B_Instruct", padding = "max_length" , truncation = True)
+tokenizer.padding_side = 'right' # to prevent warnings
+tokenizer.pad_token = tokenizer.eos_token
+tokenizer.add_eos_token = True
 
 training_arguments = TrainingArguments(
-    output_dir = "./Results/TEST",
+    output_dir = "./Results/TEST-Llama3",
     num_train_epochs = 4,
-    per_device_train_batch_size = 16,
+    per_device_train_batch_size = 8,
     gradient_accumulation_steps = 1,
     optim = "paged_adamw_32bit",
     save_strategy = "epoch",
@@ -149,12 +149,12 @@ trainer = SFTTrainer(
 
 trainer.train()
 
-# 6. Test and compare the non-fine-tuned model against the fine-tuned MistralAI's model
+# 6. Test and compare the non-fine-tuned model against the fine-tuned Llama3-8B's model
 
 import tqdm
 
-# Load the best checkpoint of Mistral-7B-Instruct
-model_id = 'Results\Mistral-7B-Instruct\checkpoint-16408'
+# Load the best checkpoint of Llama3-8B-Instruct
+model_id = 'Results\TEST-Llama3\checkpoint-5092'
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 model = AutoPeftModelForCausalLM.from_pretrained(
     model_id,
@@ -188,7 +188,11 @@ for i in tqdm.tqdm(range(0, len(test_prompts), 16)):
         ans_option.append(re.search(r'Answer: \s*(.*)', text).group(1))
     all_answers.extend(ans_option)
 
-
+all_answers_1 = [re.sub(r'</s>|://|</s|</|s>|s/|.swing', '', answers) for answers in all_answers]
+url_pattern = r'\b\S*\.com\S*|\b\S*\.gov\S*|\b\S*\.org\S*|\b\S*\.jpg'
+all_answers_2 = [re.sub(url_pattern, '', answers) for answers in all_answers_1]
+all_answers_3 = [answers.strip() for answers in all_answers_2]
+all_answers_3
 # 8. Score for the accuracy on Test set
 correct_answers = []
 for i in range(len(test_df)):
@@ -203,9 +207,8 @@ for i in range(len(test_df)):
     elif test_df['answer_idx'][i] == 'E':
         correct_answers.append(test_df['ope'][i])
 
-
 correct_count = 0
 for i in range(len(test_df)):
-    correct_count += correct_answers[i] == all_answers[i]
+    correct_count += correct_answers[i] == all_answers_3[i]
 
 correct_count/len(test_df)
