@@ -113,8 +113,9 @@ tokenizer = AutoTokenizer.from_pretrained(base_folder + "Falcon-7B-Instruct",
                                           padding = "max_length", 
                                           truncation = True, 
                                           max_length = 2048)
-tokenizer.pad_token = tokenizer.eos_token
-tokenizer.add_eos_token = True
+tokenizer.pad_token = tokenizer.unk_token
+tokenizer.pad_token_id = tokenizer.unk_token_id
+tokenizer.padding_side = 'left'
 
 training_arguments = TrainingArguments(
     output_dir = "./Results/MedQA/Falcon-7b-Instruct",
@@ -156,6 +157,9 @@ import tqdm
 # Load the best checkpoint of Mistral-7B-Instruct
 model_id = 'Results\MedQA\Falcon-7b-Instruct\checkpoint-5092'
 tokenizer = AutoTokenizer.from_pretrained(model_id)
+tokenizer.pad_token = tokenizer.unk_token
+tokenizer.pad_token_id =  tokenizer.unk_token_id
+tokenizer.padding_side = 'left'
 model = AutoPeftModelForCausalLM.from_pretrained(
     model_id,
     low_cpu_mem_usage = True,
@@ -178,11 +182,19 @@ def solve_question(question_prompt):
     answer = tokenizer.batch_decode(outputs, skip_special_tokens = True)
     return answer
 
+def remove_words_after_inst(text):
+    # Regex pattern to match "[/INST]\n" followed by any characters until the end of the sentence
+    pattern = r'Answer:.*'
+    # Using re.sub to replace the matched part with an empty string
+    result = re.sub(pattern, 'Answer: ', text, flags=re.DOTALL)
+    return result
+
 all_answers = []
 test_prompts = list(test_df['text'])
 for i in tqdm.tqdm(range(0, len(test_prompts), 16)):
     question_prompts = test_prompts[i:i+16]
-    ans = solve_question(question_prompts)
+    question_prompts2 = [remove_words_after_inst(text) for text in question_prompts]
+    ans = solve_question(question_prompts2)
     ans_option = []
     for text in ans:
         ans_option.append(re.search(r'Answer: \s*(.*)', text).group(1))
@@ -191,8 +203,9 @@ for i in tqdm.tqdm(range(0, len(test_prompts), 16)):
 all_answers_1 = [re.sub(r'</s>|://|</s|</|s>|s/|.swing', '', answers) for answers in all_answers]
 url_pattern = r'\b\S*\.com\S*|\b\S*\.gov\S*|\b\S*\.org\S*|\b\S*\.jpg'
 all_answers_2 = [re.sub(url_pattern, '', answers) for answers in all_answers_1]
-all_answers_3 = [answers.strip() for answers in all_answers_2]
-all_answers_3
+all_answers_3 = [re.sub(r'\bThe\b[^.!?]*[.!?]?|\bWhich\b[^.!?]*[.!?]?|\bWhat\b[^.!?]*[.!?]?|\(Options.*', '', answers) for answers in all_answers_2]
+all_answers_4 = [answers.strip() for answers in all_answers_3]
+all_answers_4
 
 
 # 8. Score for the accuracy on Test set
@@ -210,8 +223,40 @@ for i in range(len(test_df)):
         correct_answers.append(test_df['ope'][i])
 
 
+correct_answer = [string.lower() for string in correct_answers]
+all_answer = [string.lower() for string in all_answers]
+
+
+def filter_related_words(predicted_answer, correct_answer):
+    # Tokenize the correct answer into words
+    correct_words = correct_answer.split()
+    
+    # Create a regex pattern to match any of the correct words
+    pattern = r'\b(?:' + '|'.join(map(re.escape, correct_words)) + r')\b'
+    
+    # Find all matching words in the predicted answer
+    matches = re.findall(pattern, predicted_answer)
+    
+    # Join the matches into a string
+    result = ' '.join(matches)
+    
+    return result
+
+def match_answers(predicted_answers, correct_answers):
+    filtered_answers = []
+    for pred, corr in zip(predicted_answers, correct_answers):
+        filtered_answers.append(filter_related_words(pred, corr))
+    return filtered_answers
+
+matched_answers = match_answers(all_answer, correct_answer)
+for pred, matched, corr in zip(all_answer, matched_answers, correct_answer):
+    print(f"Predicted: {pred}")
+    print(f"Matched: {matched}")
+    print(f"Correct: {corr}")
+    print("---")
+
+
 correct_count = 0
 for i in range(len(test_df)):
-    correct_count += correct_answers[i] == all_answers_3[i]
-
+    correct_count += correct_answer[i] == matched_answers[i]
 correct_count/len(test_df)
