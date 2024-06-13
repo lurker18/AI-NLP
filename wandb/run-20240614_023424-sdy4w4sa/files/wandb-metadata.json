@@ -1,0 +1,52 @@
+{
+    "os": "Windows-10-10.0.22631-SP0",
+    "python": "3.10.11",
+    "heartbeatAt": "2024-06-13T17:34:25.604201",
+    "startedAt": "2024-06-13T17:34:24.604326",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "<python with no main file>",
+    "codePathLocal": null,
+    "git": {
+        "remote": "https://github.com/lurker18/RAG_Bio_Acronym.git",
+        "commit": "ff8679109efcc982af7a4c19ae6eb547f2f9534a"
+    },
+    "email": "lurker18@naver.com",
+    "root": "C:/Users/Nova18/Desktop/RAG_Bio_Acronym",
+    "host": "DESKTOP-J8AELIN",
+    "username": "Nova18",
+    "executable": "C:\\Users\\Nova18\\anaconda3\\envs\\tensor\\python.exe",
+    "cpu_count": 16,
+    "cpu_count_logical": 24,
+    "cpu_freq": {
+        "current": 3200.0,
+        "min": 0.0,
+        "max": 3200.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3200.0,
+            "min": 0.0,
+            "max": 3200.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 930.7607383728027,
+            "used": 586.7412414550781
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3090",
+            "memory_total": 25769803776
+        }
+    ],
+    "memory": {
+        "total": 127.74727630615234
+    }
+}

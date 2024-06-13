@@ -18,7 +18,7 @@ from trl import SFTTrainer
 os.environ["WANDB_DISABLED"] = "true"
 warnings.filterwarnings("ignore")
 
-base_folder = "E:/HuggingFace/models/TII/"
+base_folder = "D:/HuggingFace/models/TII/"
 
 # 1. Load the Dataset
 dataset = load_dataset("bigbio/med_qa")
@@ -154,12 +154,23 @@ trainer.train()
 # 6. Test and compare the non-fine-tuned model against the fine-tuned MistralAI's model
 import tqdm
 
+def generate_test_prompt(x):
+    question = '{}\nOptions:\n1. {}\n2. {}\n3. {}\n4. {}\n5. {}\n'.format(x['question'], x['opa'], x['opb'], x['opc'], x['opd'], x['ope'])
+    prompt = f"""
+    Question:
+    {question}
+    [INST] Solve this medical question-answering and provide the correct option. [/INST]
+    Answer: """ 
+    return prompt
+test_df['text'] = test_df.apply(lambda x: generate_test_prompt(x), axis = 1)
+
 # Load the best checkpoint of Mistral-7B-Instruct
 model_id = 'Results\MedQA\Falcon-7b-Instruct\checkpoint-5092'
 tokenizer = AutoTokenizer.from_pretrained(model_id)
-tokenizer.pad_token = tokenizer.unk_token
-tokenizer.pad_token_id =  tokenizer.unk_token_id
-tokenizer.padding_side = 'left'
+tokenizer.padding_side = 'right'
+tokenizer.pad_token = tokenizer.eos_token
+tokenizer.add_eos_token = True
+
 model = AutoPeftModelForCausalLM.from_pretrained(
     model_id,
     low_cpu_mem_usage = True,
@@ -170,6 +181,7 @@ model = AutoPeftModelForCausalLM.from_pretrained(
 generation_config = GenerationConfig(
     do_sample = True,
     top_k = 1,
+    top_p = 0.9,
     temperature = 0.1,
     max_new_tokens = 25,
     pad_token_id = tokenizer.pad_token_id
@@ -182,30 +194,15 @@ def solve_question(question_prompt):
     answer = tokenizer.batch_decode(outputs, skip_special_tokens = True)
     return answer
 
-def remove_words_after_inst(text):
-    # Regex pattern to match "[/INST]\n" followed by any characters until the end of the sentence
-    pattern = r'Answer:.*'
-    # Using re.sub to replace the matched part with an empty string
-    result = re.sub(pattern, 'Answer: ', text, flags=re.DOTALL)
-    return result
-
 all_answers = []
 test_prompts = list(test_df['text'])
 for i in tqdm.tqdm(range(0, len(test_prompts), 16)):
     question_prompts = test_prompts[i:i+16]
-    question_prompts2 = [remove_words_after_inst(text) for text in question_prompts]
-    ans = solve_question(question_prompts2)
+    ans = solve_question(question_prompts)
     ans_option = []
     for text in ans:
         ans_option.append(re.search(r'Answer: \s*(.*)', text).group(1))
     all_answers.extend(ans_option)
-
-all_answers_1 = [re.sub(r'</s>|://|</s|</|s>|s/|.swing', '', answers) for answers in all_answers]
-url_pattern = r'\b\S*\.com\S*|\b\S*\.gov\S*|\b\S*\.org\S*|\b\S*\.jpg'
-all_answers_2 = [re.sub(url_pattern, '', answers) for answers in all_answers_1]
-all_answers_3 = [re.sub(r'\bThe\b[^.!?]*[.!?]?|\bWhich\b[^.!?]*[.!?]?|\bWhat\b[^.!?]*[.!?]?|\(Options.*', '', answers) for answers in all_answers_2]
-all_answers_4 = [answers.strip() for answers in all_answers_3]
-all_answers_4
 
 
 # 8. Score for the accuracy on Test set
@@ -222,41 +219,21 @@ for i in range(len(test_df)):
     elif test_df['answer_idx'][i] == 'E':
         correct_answers.append(test_df['ope'][i])
 
+def match_and_replace(a, b):
+    # Create a case-insensitive regex pattern to find the a string in b
+    pattern = re.compile(re.escape(a), re.IGNORECASE)
+    match = pattern.search(b)
+    if match:
+        # If a match is found, replace the entire b string with the exact a string
+        b = a
+    return b
 
-correct_answer = [string.lower() for string in correct_answers]
-all_answer = [string.lower() for string in all_answers]
-
-
-def filter_related_words(predicted_answer, correct_answer):
-    # Tokenize the correct answer into words
-    correct_words = correct_answer.split()
-    
-    # Create a regex pattern to match any of the correct words
-    pattern = r'\b(?:' + '|'.join(map(re.escape, correct_words)) + r')\b'
-    
-    # Find all matching words in the predicted answer
-    matches = re.findall(pattern, predicted_answer)
-    
-    # Join the matches into a string
-    result = ' '.join(matches)
-    
-    return result
-
-def match_answers(predicted_answers, correct_answers):
-    filtered_answers = []
-    for pred, corr in zip(predicted_answers, correct_answers):
-        filtered_answers.append(filter_related_words(pred, corr))
-    return filtered_answers
-
-matched_answers = match_answers(all_answer, correct_answer)
-for pred, matched, corr in zip(all_answer, matched_answers, correct_answer):
-    print(f"Predicted: {pred}")
-    print(f"Matched: {matched}")
-    print(f"Correct: {corr}")
-    print("---")
-
+# Apply the function to each element in the lists
+b_list_modified = [match_and_replace(a, b) for a, b in zip(correct_answers, all_answers)]
+all_answers_2 = [re.sub(r'</s>', '', sentence) for sentence in b_list_modified]
+all_answers_3 = [sentence.strip() for sentence in all_answers_2]
 
 correct_count = 0
 for i in range(len(test_df)):
-    correct_count += correct_answer[i] == matched_answers[i]
+    correct_count += correct_answers[i] == all_answers_3[i]
 correct_count/len(test_df)

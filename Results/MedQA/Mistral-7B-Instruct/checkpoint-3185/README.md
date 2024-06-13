@@ -1,6 +1,6 @@
 ---
 library_name: peft
-base_model: E:/HuggingFace/models/MistralAI/Mistral-7B-Instruct-v0.2
+base_model: D:/HuggingFace/models/MistralAI/Mistral-7B-Instruct-v0.2
 ---
 
 # Model Card for Model ID

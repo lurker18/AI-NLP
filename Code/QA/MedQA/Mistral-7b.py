@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 from typing import Optional
 import pandas as pd
 import re
@@ -18,7 +18,7 @@ from trl import SFTTrainer
 os.environ["WANDB_DISABLED"] = "true"
 warnings.filterwarnings("ignore")
 
-base_folder = "E:/HuggingFace/models/MistralAI/"
+base_folder = "D:/HuggingFace/models/MistralAI/"
 
 # 1. Load the Dataset
 dataset = load_dataset("bigbio/med_qa")
@@ -46,9 +46,10 @@ def generate_prompt(x):
                                                                           x['opd'], 
                                                                           x['ope'])
     answer = answer_idx
-    prompt = f"""Question:
+    prompt = f"""
+    Question:
     {question}
-    [INST] Solve this medical question-answering and provide the correct option. [/INST]
+    [INST] Solve this medical question-answering by selecting the correct option. [/INST]
     Answer: {answer} </s>""" 
     return prompt
 
@@ -81,6 +82,7 @@ test_df, test_hf = convert_format_df(test_data)
 bnb_config = BitsAndBytesConfig(
     load_in_4bit = True,
     bnb_4bit_quant_type = "nf4",
+    bnb_4bit_compute_dtype = torch.bfloat16,
     bnb_4bit_use_double_quant = False,
 )
 
@@ -115,16 +117,17 @@ tokenizer.pad_token_id =  tokenizer.unk_token_id
 tokenizer.padding_side = 'left' # to prevent warnings
 
 training_arguments = TrainingArguments(
-    output_dir = "./Results/TEST",
-    num_train_epochs = 4,
+    output_dir = "./Results/MedQA/Mistral-7B-Instruct",
+    num_train_epochs = 5,
     per_device_train_batch_size = 16,
     gradient_accumulation_steps = 1,
     optim = "paged_adamw_32bit",
+    lr_scheduler_type = "cosine",
     save_strategy = "epoch",
     logging_steps = 100,
     logging_strategy = "steps",
     learning_rate = 2e-4,
-    bf16 = False,
+    bf16 = True,
     fp16 = False, 
     group_by_length = True,
     disable_tqdm = False,
@@ -141,7 +144,7 @@ trainer = SFTTrainer(
     eval_dataset = val_hf,
     peft_config = peft_config,
     dataset_text_field = "text",
-    max_seq_length = 2048,
+    max_seq_length = 512,
     tokenizer = tokenizer,
     args = training_arguments,
     packing = False,
@@ -153,9 +156,23 @@ trainer.train()
 
 import tqdm
 
+def generate_test_prompt(x):
+    question = '{}\nOptions:\n1. {}\n2. {}\n3. {}\n4. {}\n5. {}\n'.format(x['question'], x['opa'], x['opb'], x['opc'], x['opd'], x['ope'])
+    prompt = f"""
+    Question:
+    {question}
+    [INST] Choose only one answer within the listed options. Don't make a sentence from the given options. [/INST]
+    Answer: """ 
+    return prompt
+test_df['text'] = test_df.apply(lambda x: generate_test_prompt(x), axis = 1)
+
+
 # Load the best checkpoint of Mistral-7B-Instruct
-model_id = 'Results\TEST-Mistral-7B\checkpoint-2548'
+model_id = 'Results\MedQA\Mistral-7B-Instruct\checkpoint-3185'
 tokenizer = AutoTokenizer.from_pretrained(model_id)
+tokenizer.pad_token = tokenizer.unk_token
+tokenizer.pad_token_id =  tokenizer.unk_token_id
+tokenizer.padding_side = 'left' # to prevent warnings
 model = AutoPeftModelForCausalLM.from_pretrained(
     model_id,
     low_cpu_mem_usage = True,
@@ -212,6 +229,5 @@ for i in range(len(test_df)):
 
 correct_count = 0
 for i in range(len(test_df)):
-    correct_count += correct_answers[i] == all_answers_3[i]
-
+    correct_count += correct_answers[i] == all_answers[i]
 correct_count/len(test_df)
