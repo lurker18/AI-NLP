@@ -110,12 +110,12 @@ model = get_peft_model(model, peft_config)
 
 # 4.1 Select the tokenizer
 tokenizer = AutoTokenizer.from_pretrained(base_folder + "Llama_3_8B_Instruct", padding = "max_length" , truncation = True)
-tokenizer.padding_side = 'right' # to prevent warnings
+tokenizer.padding_side = 'left' # to prevent warnings
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.add_eos_token = True
 
 training_arguments = TrainingArguments(
-    output_dir = "./Results/TEST-Llama3",
+    output_dir = "./Results/MedQA/Llama3-8B-Instruct",
     num_train_epochs = 4,
     per_device_train_batch_size = 8,
     gradient_accumulation_steps = 1,
