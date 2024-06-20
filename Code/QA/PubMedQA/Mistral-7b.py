@@ -1,6 +1,5 @@
 
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import re
 import pandas as pd
 import warnings
@@ -17,7 +16,7 @@ from Code.utils import convert_format_df
 os.environ["WANDB_DISABLED"] = "true"
 warnings.filterwarnings("ignore")
 
-base_folder = "D:/HuggingFace/models/MistralAI/"
+base_folder = "E:/HuggingFace/models/MistralAI/"
 
 # 1. Load the Dataset
 dataset = load_dataset("bigbio/pubmed_qa")
@@ -62,15 +61,15 @@ peft_config = LoraConfig(
 model = get_peft_model(model, peft_config)
 
 # 4.1 Select the tokenizer
-tokenizer = AutoTokenizer.from_pretrained(base_folder + "Mistral-7B-Instruct-v0.2", padding = "max_length", truncation = True, max_length = 2048)
+tokenizer = AutoTokenizer.from_pretrained(base_folder + "Mistral-7B-Instruct-v0.2", padding = "max_length", truncation = True, max_length = 1536)
 tokenizer.pad_token = tokenizer.unk_token
 tokenizer.pad_token_id =  tokenizer.unk_token_id
 tokenizer.padding_side = 'left' # to prevent warnings
 
 training_arguments = TrainingArguments(
     output_dir = "./Results/PubMedQA/Mistral-7B-Instruct",
-    num_train_epochs = 5,
-    per_device_train_batch_size = 2,
+    num_train_epochs = 3,
+    per_device_train_batch_size = 8,
     gradient_accumulation_steps = 1,
     optim = "paged_adamw_32bit",
     lr_scheduler_type = "cosine",
@@ -92,7 +91,7 @@ trainer = SFTTrainer(
     eval_dataset = val_hf,
     peft_config = peft_config,
     dataset_text_field = "text",
-    max_seq_length = 2048,
+    max_seq_length = 1536,
     tokenizer = tokenizer,
     args = training_arguments,
     packing = False,
