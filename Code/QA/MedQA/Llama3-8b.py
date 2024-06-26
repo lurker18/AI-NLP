@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 from typing import Optional
 import pandas as pd
 import re
@@ -18,7 +18,7 @@ from trl import SFTTrainer
 os.environ["WANDB_DISABLED"] = "true"
 warnings.filterwarnings("ignore")
 
-base_folder = "E:/HuggingFace/models/MetaAI/"
+base_folder = "/media/lurker18/HardDrive/HuggingFace/models/MetaAI/"
 
 # 1. Load the Dataset
 dataset = load_dataset("bigbio/med_qa")
@@ -39,22 +39,18 @@ def generate_prompt(x):
         answer_idx = x['opd']
     elif x['answer_idx'] == 'E':
         answer_idx = x['ope']
-    question = '{}\nOptions:\n1. {}\n2. {}\n3. {}\n4. {}\n5. {}\n'.format(x['question'], 
-                                                                          x['opa'],
-                                                                          x['opb'], 
-                                                                          x['opc'], 
-                                                                          x['opd'], 
-                                                                          x['ope'])
+    question = '{}\n\nA. {}\nB. {}\nC. {}\nD. {}\nE. {}\n'.format(x['question'], 
+                                                                x['opa'],
+                                                                x['opb'], 
+                                                                x['opc'], 
+                                                                x['opd'], 
+                                                                x['ope'])
     answer = answer_idx
-    prompt = f"""Question:
-    {question}
-    [INST] Solve this medical question-answering and provide the correct option. [/INST]
-    Answer: {answer} </s>""" 
+    prompt = f"Question:\n{question}\n Answer: {answer} "
     return prompt
 
 def generate_and_tokenize_prompt(prompt):
     return tokenizer(generate_prompt(prompt), padding = "max_length", truncation = True, max_length = 2048)
-
 
 def convert_format_df(data):
     data_extracted = [
@@ -81,7 +77,7 @@ test_df, test_hf = convert_format_df(test_data)
 bnb_config = BitsAndBytesConfig(
     load_in_4bit = True,
     bnb_4bit_quant_type = "nf4",
-    bnb_4bit_compute_dtype = torch.float16,
+    bnb_4bit_compute_dtype = torch.bfloat16,
     bnb_4bit_use_double_quant = True,
 )
 
@@ -89,8 +85,8 @@ bnb_config = BitsAndBytesConfig(
 model = AutoModelForCausalLM.from_pretrained(
     base_folder + "Llama_3_8B_Instruct",
     quantization_config = bnb_config,
-    #attn_implementation = "flash_attention_2",
-    torch_dtype = torch.float16,
+    attn_implementation = "flash_attention_2",
+    torch_dtype = torch.bfloat16,
     device_map = "auto",
     use_auth_token = False,
 )
@@ -110,21 +106,24 @@ model = get_peft_model(model, peft_config)
 
 # 4.1 Select the tokenizer
 tokenizer = AutoTokenizer.from_pretrained(base_folder + "Llama_3_8B_Instruct", padding = "max_length" , truncation = True)
-tokenizer.padding_side = 'right' # to prevent warnings
+tokenizer.padding_side = 'left' # to prevent warnings
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.add_eos_token = True
 
 training_arguments = TrainingArguments(
-    output_dir = "./Results/TEST-Llama3",
-    num_train_epochs = 4,
+    output_dir = "./Results/MedQA/Llama3-8B-Instruct",
+    num_train_epochs = 6,
     per_device_train_batch_size = 8,
+    per_device_eval_batch_size = 8,
     gradient_accumulation_steps = 1,
     optim = "paged_adamw_32bit",
+    lr_scheduler_type = "cosine",
     save_strategy = "epoch",
     logging_steps = 100,
     logging_strategy = "steps",
     learning_rate = 2e-4,
-    bf16 = False,
+    warmup_ratio = 0.04,
+    bf16 = True,
     fp16 = False, 
     group_by_length = True,
     disable_tqdm = False,
@@ -141,7 +140,7 @@ trainer = SFTTrainer(
     eval_dataset = val_hf,
     peft_config = peft_config,
     dataset_text_field = "text",
-    max_seq_length = 2048,
+    max_seq_length = 1024,
     tokenizer = tokenizer,
     args = training_arguments,
     packing = False,
@@ -153,9 +152,35 @@ trainer.train()
 
 import tqdm
 
+def generate_test_prompt(x):
+    answer_idx = 'Nothing'
+    if x['answer_idx'] == 'A':
+        answer_idx = x['opa']
+    elif x['answer_idx'] == 'B':
+        answer_idx = x['opb']
+    elif x['answer_idx'] == 'C':
+        answer_idx = x['opc']
+    elif x['answer_idx'] == 'D':
+        answer_idx = x['opd']
+    elif x['answer_idx'] == 'E':
+        answer_idx = x['ope']
+    question = '{}\n\nA. {}\nB. {}\nC. {}\nD. {}\nE. {}\n'.format(x['question'], 
+                                                                x['opa'],
+                                                                x['opb'], 
+                                                                x['opc'], 
+                                                                x['opd'], 
+                                                                x['ope'])
+    prompt = f"Question:\n{question}\n Answer: "
+    return prompt
+test_df['text'] = test_df.apply(lambda x: generate_test_prompt(x), axis = 1)
+
 # Load the best checkpoint of Llama3-8B-Instruct
-model_id = 'Results\TEST-Llama3\checkpoint-5092'
+model_id = 'Results/MedQA/Llama3-8B-Instruct/checkpoint-7638'
 tokenizer = AutoTokenizer.from_pretrained(model_id)
+tokenizer.padding_side = 'left' # to prevent warnings
+tokenizer.pad_token = tokenizer.eos_token
+tokenizer.add_eos_token = True
+
 model = AutoPeftModelForCausalLM.from_pretrained(
     model_id,
     low_cpu_mem_usage = True,
@@ -166,6 +191,7 @@ model = AutoPeftModelForCausalLM.from_pretrained(
 generation_config = GenerationConfig(
     do_sample = True,
     top_k = 1,
+    top_p = 0.9,
     temperature = 0.1,
     max_new_tokens = 25,
     pad_token_id = tokenizer.pad_token_id
@@ -210,5 +236,4 @@ for i in range(len(test_df)):
 correct_count = 0
 for i in range(len(test_df)):
     correct_count += correct_answers[i] == all_answers_3[i]
-
 correct_count/len(test_df)
