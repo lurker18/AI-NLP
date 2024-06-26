@@ -18,7 +18,7 @@ from trl import SFTTrainer
 os.environ["WANDB_DISABLED"] = "true"
 warnings.filterwarnings("ignore")
 
-base_folder = "E:/HuggingFace/models/MistralAI/"
+base_folder = "D:/HuggingFace/models/MistralAI/"
 
 # 1. Load the Dataset
 dataset = load_dataset("bigbio/med_qa")
@@ -202,7 +202,7 @@ for i in tqdm.tqdm(range(0, len(test_prompts), 16)):
     ans = solve_question(question_prompts)
     ans_option = []
     for text in ans:
-        ans_option.append(re.search(r'Answer: \s*(.*)', text).group(1).strip())
+        ans_option.append(re.search(r'Answer: \s*(.*)', text).group(1))
     all_answers.extend(ans_option)
 
 all_answers_1 = [re.sub(r'</s>|://|</s|</|s>|s/|.swing', '', answers) for answers in all_answers]
@@ -226,11 +226,8 @@ for i in range(len(test_df)):
     elif test_df['answer_idx'][i] == 'E':
         correct_answers.append(test_df['ope'][i])
 
+
 correct_count = 0
 for i in range(len(test_df)):
     correct_count += correct_answers[i] == all_answers[i]
 correct_count/len(test_df)
-
-len(all_answers) == len(correct_answers)
-
-### Mistral-7B-Instruct => 46.7% (ACC)
