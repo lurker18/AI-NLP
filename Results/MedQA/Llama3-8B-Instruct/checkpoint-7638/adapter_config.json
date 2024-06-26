@@ -23,10 +23,17 @@
     "o_proj",
     "q_proj",
     "k_proj",
+<<<<<<<< HEAD:Results/MedQA/Llama3-8B-Instruct/checkpoint-7638/adapter_config.json
     "gate_proj",
     "down_proj",
     "v_proj",
     "up_proj"
+========
+    "v_proj",
+    "up_proj",
+    "gate_proj",
+    "down_proj"
+>>>>>>>> adf0e9c6efb46371f8e83d00f2dad39b1f9552c6:Results/MedQA/Llama3-8B-Instruct/checkpoint-3819/adapter_config.json
   ],
   "task_type": "CAUSAL_LM",
   "use_dora": false,
