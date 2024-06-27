@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+#os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 from typing import Optional
 import pandas as pd
 import re
@@ -18,7 +18,7 @@ from trl import SFTTrainer
 os.environ["WANDB_DISABLED"] = "true"
 warnings.filterwarnings("ignore")
 
-base_folder = "E:/HuggingFace/models/MetaAI/"
+base_folder = "/mnt/nvme01/huggingface/models/MetaAI/"
 
 # 1. Load the Dataset
 dataset = load_dataset("bigbio/med_qa")
@@ -55,7 +55,6 @@ def generate_prompt(x):
 def generate_and_tokenize_prompt(prompt):
     return tokenizer(generate_prompt(prompt), padding = "max_length", truncation = True, max_length = 2048)
 
-
 def convert_format_df(data):
     data_extracted = [
     {'question' : variable['question'], 
@@ -89,10 +88,11 @@ bnb_config = BitsAndBytesConfig(
 model = AutoModelForCausalLM.from_pretrained(
     base_folder + "Llama_3_8B_Instruct",
     quantization_config = bnb_config,
-    #attn_implementation = "flash_attention_2",
+    attn_implementation = "flash_attention_2",
     torch_dtype = torch.float16,
-    device_map = "auto",
+    device_map = "balanced",
     use_auth_token = False,
+    use_safetensors = True,
 )
 model.config.use_cache = False
 model.config.pretraining_tp = 1
@@ -110,16 +110,15 @@ model = get_peft_model(model, peft_config)
 
 # 4.1 Select the tokenizer
 tokenizer = AutoTokenizer.from_pretrained(base_folder + "Llama_3_8B_Instruct", padding = "max_length" , truncation = True)
-tokenizer.padding_side = 'left' # to prevent warnings
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.add_eos_token = True
 
 training_arguments = TrainingArguments(
     output_dir = "./Results/MedQA/Llama3-8B-Instruct",
     num_train_epochs = 4,
-    per_device_train_batch_size = 8,
+    per_device_train_batch_size = 16,
     gradient_accumulation_steps = 1,
-    optim = "paged_adamw_32bit",
+    optim = "paged_adamw_8bit",
     save_strategy = "epoch",
     logging_steps = 100,
     logging_strategy = "steps",
@@ -130,9 +129,6 @@ training_arguments = TrainingArguments(
     disable_tqdm = False,
     report_to = None
 )
-
-#dataset = load_dataset("json", data_files = "Dataset/data-mistral.json", field = "json", split = "train")
-#dataset = dataset.map(generate_and_tokenize_prompt)
 
 # 5. Training the model
 trainer = SFTTrainer(
@@ -150,11 +146,8 @@ trainer = SFTTrainer(
 trainer.train()
 
 # 6. Test and compare the non-fine-tuned model against the fine-tuned Llama3-8B's model
-
-import tqdm
-
 # Load the best checkpoint of Llama3-8B-Instruct
-model_id = 'Results\TEST-Llama3\checkpoint-5092'
+model_id = 'Results\MedQA\Llama3-8B-Instruct\checkpoint-2548'
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 model = AutoPeftModelForCausalLM.from_pretrained(
     model_id,

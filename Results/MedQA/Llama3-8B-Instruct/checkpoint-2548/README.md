@@ -1,6 +1,6 @@
 ---
 library_name: peft
-base_model: E:/HuggingFace/models/MetaAI/Llama_3_8B_Instruct
+base_model: /mnt/nvme01/huggingface/models/MetaAI/Llama_3_8B_Instruct
 ---
 
 # Model Card for Model ID
@@ -199,4 +199,4 @@ Carbon emissions can be estimated using the [Machine Learning Impact calculator]
 [More Information Needed]
 ### Framework versions
 
-- PEFT 0.11.1
+- PEFT 0.10.0
