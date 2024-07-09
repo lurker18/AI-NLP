@@ -65,3 +65,25 @@ test_data = get_mmlu_datasets()
 
 test_df, test_hf = convert_format_df(test_data, data_name = 'mmlu')
 test_df['text'] = test_df.apply(lambda x : generate_prompt(x, data_name = 'mmlu'), axis = 1)
+
+#### 5. MedQuAD
+raw_data = load_dataset("lavita/MedQuAD", split = 'train')
+temp_dataset = raw_data.train_test_split(test_size = 0.2)
+dataset = temp_dataset['train'].train_test_split(test_size = 0.125)
+dataset.set_format(type = 'pandas')
+temp_dataset.set_format(type = 'pandas')
+train_data = dataset['train'][:]
+val_data = dataset['test'][:]
+test_data = temp_dataset['test'][:]
+
+train_df, train_hf = convert_format_df(train_data,  data_name = 'medquad')
+val_df, val_hf = convert_format_df(val_data,  data_name = 'medquad')
+test_df, test_hf = convert_format_df(test_data,  data_name = 'medquad')
+
+dataset2 = datasets.DatasetDict({"train" : train_hf,
+                                 "validation" : val_hf,
+                                 "test": test_hf})
+
+train_df['text'] = train_df.apply(lambda x: generate_prompt(x, data_name = 'medquad'), axis = 1)
+val_df['text'] = val_df.apply(lambda x: generate_prompt(x, data_name = 'medquad'), axis = 1)
+test_df['text'] = test_df.apply(lambda x: generate_prompt(x, data_name = 'medquad'), axis = 1)

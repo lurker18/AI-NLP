@@ -51,6 +51,13 @@ def convert_format_df(data, data_name = 'medqa'):
         'opd' : data['choices'][i][3]}
         for i in range(len(data))
         ]
+    # MedQuAD Dataset
+    elif data_name == 'medquad':
+        data_extracted = [
+        {'question' : data['question'][i], 
+        'answer' : data['answer'][i]}
+        for i in range(len(data))
+        ]
     df = pd.DataFrame(data_extracted)
     df['text'] = df.apply(lambda x: generate_prompt(x, data_name = data_name), axis = 1)
     data_hf = Dataset.from_pandas(df)
@@ -127,6 +134,11 @@ def generate_prompt(x, data_name = 'medqa'):
         {question}
         [INST] Solve this medical and biological question-answering and provide the correct option. [/INST]
         Answer: {answer} </s>""" 
+    
+    # MedQuAD Dataset
+    elif data_name == 'medquad':
+        prompt = f"Question: {x['question']}\nAnswer: {x['answer']}"
+        
     return prompt
 
 # Defining getting mmlu datasets

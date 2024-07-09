@@ -5,3 +5,4 @@
 .env
 *.safetensors filter=lfs diff=lfs merge=lfs -text
 *.pt filter=lfs diff=lfs merge=lfs -text
+*.model filter=fls diff=lfs merge=lfs -text
