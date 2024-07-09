@@ -157,9 +157,6 @@ training_arguments = TrainingArguments(
     report_to = None
 )
 
-dataset = load_dataset("json", data_files = "Dataset/data-zephyr.json", field = "json", split = "train")
-dataset = dataset.map(generate_and_tokenize_prompt)
-
 # 5. Training the model
 trainer = SFTTrainer(
     model = model,
