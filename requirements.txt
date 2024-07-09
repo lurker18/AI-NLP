@@ -2,3 +2,4 @@ transformers>=4.38.1
 trl==0.7.9
 datasets==2.16
 tokenizers==0.15.2
+chromadb
