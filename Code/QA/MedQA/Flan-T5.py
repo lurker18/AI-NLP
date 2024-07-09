@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+#os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 from typing import Optional
 import nltk
 import pandas as pd
@@ -19,7 +19,7 @@ import tensorrt as trt
 os.environ["WANDB_DISABLED"] = "true"
 warnings.filterwarnings("ignore")
 
-base_folder = "D:/HuggingFace/models/Google/"
+base_folder = "/mnt/nvme01/huggingface/models/Google/"
 
 # 1. Load the Dataset
 dataset = load_dataset("bigbio/med_qa")
@@ -196,57 +196,6 @@ trainer = Seq2SeqTrainer(
 
 trainer.train()
 
-tokenizer = T5Tokenizer.from_pretrained('Results/MedQA/Flan-T5/checkpoint-315')
-model = T5ForConditionalGeneration.from_pretrained('Results/MedQA/Flan-T5/checkpoint-315')
-def generate_answer(question, model, tokenizer, max_length=512):
-    input_text = "Please answer this question: " + question
-    inputs = tokenizer(input_text, return_tensors="pt")
-    outputs = model.generate(
-        inputs["input_ids"], 
-        max_length = max_length, 
-        num_beams = 5, 
-        early_stopping = True
-    )
-    answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    return answer
-
-# Example question 1
-question = "What causes Celiac Disease ?"
-
-# Generate the answer
-answer = generate_answer(question, model, tokenizer)
-print("Question:", question)
-print("Answer:", answer)
-
-
-import sacrebleu
-import numpy as np
-
-# Function to compute BLEU scores
-def compute_bleu(preds, labels):
-    decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
-    decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
-
-    # Prepare references for sacrebleu
-    decoded_labels = [[label] for label in decoded_labels]
-
-    # Compute BLEU score
-    bleu = sacrebleu.corpus_bleu(decoded_preds, decoded_labels)
-
-    return bleu.score
-
-# Assuming you have the trainer object from the previous code
-eval_results = trainer.predict(tokenized_dataset["test"])
-preds = eval_results.predictions
-labels = eval_results.label_ids
-
-# Replace -100 in labels as tokenizer.pad_token_id
-labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
-
-# Compute BLEU score
-bleu_score = compute_bleu(preds, labels)
-print(f"BLEU score: {bleu_score}")
-
 # %%
 # 6. Test and compare the non-fine-tuned model against the fine-tuned MistralAI's model
 import tqdm
@@ -258,7 +207,7 @@ def generate_test_prompt(x):
 test_df['text'] = test_df.apply(lambda x: generate_test_prompt(x), axis = 1)
 
 # Load the best checkpoint of Mistral-7B-Instruct
-model_id = 'Results\MedQA\Flan-T5\checkpoint-315'
+model_id = 'Results/MedQA/Flan-T5/checkpoint-1274'
 tokenizer = T5Tokenizer.from_pretrained(model_id, use_fast = False)
 model = T5ForConditionalGeneration.from_pretrained(
     model_id,
@@ -291,7 +240,25 @@ for i in tqdm.tqdm(range(0, len(test_prompts), 16)):
     ans = solve_question(question_prompts)
     all_answers.extend(ans)
 
+
 # 8. Score for the accuracy on Test set
+pred_answers = []
+for i in range(len(test_df)):
+    if all_answers[i] == '1.':
+        pred_answers.append(test_df['opa'][i])
+    elif all_answers[i] == '2.':
+        pred_answers.append(test_df['opb'][i])
+    elif all_answers[i] == '3.':
+        pred_answers.append(test_df['opc'][i])
+    elif all_answers[i] == '4.':
+        pred_answers.append(test_df['opd'][i])
+    elif all_answers[i] == '5.':
+        pred_answers.append(test_df['ope'][i])
+    else:
+        pred_answers.append(all_answers[i])
+
+all_answers = [re.sub(r'\n|"', '', answers) for answers in pred_answers]
+
 correct_answers = []
 for i in range(len(test_df)):
     if test_df['answer_idx'][i] == 'A':
@@ -309,3 +276,29 @@ correct_count = 0
 for i in range(len(test_df)):
     correct_count += correct_answers[i] == all_answers[i]
 correct_count/len(test_df)
+
+
+import sacrebleu
+import numpy as np
+def compute_bleu(preds, labels):
+    decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+    decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+
+    # Prepare references for sacrebleu
+    decoded_labels = [[label] for label in decoded_labels]
+
+    # Compute BLEU score
+    bleu = sacrebleu.corpus_bleu(decoded_preds, decoded_labels)
+
+    return bleu.score
+
+tokenized_dataset["test"] = tokenized_dataset["test"].remove_columns(['answer_idx', 'opa', 'opb', 'opc', 'opd', 'ope', 'text'])
+
+eval_results = trainer.predict(tokenized_dataset["test"])
+preds = eval_results.predictions
+labels = eval_results.label_ids
+
+labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+
+bleu_score = compute_bleu(preds, labels)
+print(bleu_score)

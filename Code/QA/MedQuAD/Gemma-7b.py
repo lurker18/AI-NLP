@@ -5,7 +5,7 @@ import json
 import warnings
 
 import torch
-from datasets import load_dataset
+from datasets import load_dataset, Dataset, DatasetDict
 from peft import LoraConfig, prepare_model_for_kbit_training, get_peft_model
 from transformers import (AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, AutoTokenizer, TrainingArguments,)
 from tqdm import tqdm
@@ -18,31 +18,42 @@ warnings.filterwarnings("ignore")
 base_folder = "/media/lurker18/HardDrive/HuggingFace/models/Google/"
 
 # 1. Load the Dataset
-df = pd.read_csv("Dataset/MedQuAD.csv")
-temp = df.loc[df['answer'].notnull(), ['question', 'answer']]
-medquad = temp.reset_index()
-del medquad['index']
-medquad.columns = ['text', 'label']
-medquad.head()
+raw_data = load_dataset("lavita/MedQuAD", split = 'train')
+raw_data.set_format(type = 'pandas')
+raw_df = raw_data[:]
+temp = raw_df[~raw_df['answer'].isnull() & (raw_df['answer'] != '')]
+raw_data = Dataset.from_pandas(temp)
+temp_dataset = raw_data.train_test_split(test_size = 0.2)
+dataset = temp_dataset['train'].train_test_split(test_size = 0.125)
+dataset.set_format(type = 'pandas')
+temp_dataset.set_format(type = 'pandas')
+train_data = dataset['train'][:]
+val_data = dataset['test'][:]
+test_data = temp_dataset['test'][:]
+df_train = train_data[['question', 'answer']]
+df_val = val_data[['question', 'answer']]
+df_test = test_data[['question', 'answer']]
 
-# result = list(medquad.to_json(orient = "records"))
-# result[0] = '{"json":['
-# result[-1] = ']'
-# result.append('}')#
+train_dataset = Dataset.from_pandas(df_train)
+val_dataset = Dataset.from_pandas(df_val)
+test_dataset = Dataset.from_pandas(df_test)
 
-# result = ''.join(result)
-# result = result.strip('"\'')
-# result = json.loads(result)
-# with open("Dataset/data-gemma.json", 'w') as json_file:
-#     json.dump(result, json_file)
+health_dataset_dict = DatasetDict({
+    'train': train_dataset,
+    'validation': val_dataset,
+    'test': test_dataset
+})
+# %%
 
-# 2. Preset the the Instruction-based prompt template
-def formatting_func(example):
-    text = f"### Question: {example['text']}\n ### Answer:\n{example['label']}"
-    return text
+def print_number_of_trainable_model_parameters(model):
+    trainable_model_params = 0
+    all_model_params = 0
+    for _, param in model.named_parameters():
+        all_model_params += param.numel()
+        if param.requires_grad:
+            trainable_model_params += param.numel()
+    return f"trainable model parameters: {trainable_model_params}\nall model parameters: {all_model_params}\npercentage of trainable model parameters: {100 * trainable_model_params / all_model_params:.2f}%"
 
-def generate_and_tokenize_prompt(prompt):
-    return tokenizer(formatting_func(prompt), truncation = True, padding = "max_length")
 
 # 3. Set the quantization settings
 bnb_config = BitsAndBytesConfig(

@@ -197,5 +197,3 @@ labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
 # Compute BLEU score
 bleu_score = compute_bleu(preds, labels)
 print(f"BLEU score: {bleu_score}")
-
-# %%

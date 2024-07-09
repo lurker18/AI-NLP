@@ -4,9 +4,11 @@ from typing import Optional
 import pandas as pd
 import json
 import warnings
-
+import nltk
+import numpy as np
+import evaluate
 import torch
-from datasets import load_dataset
+from datasets import load_dataset, Dataset, DatasetDict
 from peft import LoraConfig, prepare_model_for_kbit_training, get_peft_model
 from transformers import (AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, AutoTokenizer, TrainingArguments,)
 from tqdm import tqdm
@@ -17,33 +19,42 @@ os.environ["WANDB_DISABLED"] = "true"
 warnings.filterwarnings("ignore")
 
 base_folder = "/media/lurker18/HardDrive/HuggingFace/models/HuggingFaceH4/"
-
 # 1. Load the Dataset
-df = pd.read_csv("Dataset/MedQuAD.csv")
-temp = df.loc[df['answer'].notnull(), ['question', 'answer']]
-medquad = temp.reset_index()
-del medquad['index']
-medquad.columns = ['text', 'label']
-medquad.head()
+raw_data = load_dataset("lavita/MedQuAD", split = 'train')
+raw_data.set_format(type = 'pandas')
+raw_df = raw_data[:]
+temp = raw_df[~raw_df['answer'].isnull() & (raw_df['answer'] != '')]
+raw_data = Dataset.from_pandas(temp)
+temp_dataset = raw_data.train_test_split(test_size = 0.2)
+dataset = temp_dataset['train'].train_test_split(test_size = 0.125)
+dataset.set_format(type = 'pandas')
+temp_dataset.set_format(type = 'pandas')
+train_data = dataset['train'][:]
+val_data = dataset['test'][:]
+test_data = temp_dataset['test'][:]
+df_train = train_data[['question', 'answer']]
+df_val = val_data[['question', 'answer']]
+df_test = test_data[['question', 'answer']]
 
-result = list(medquad.to_json(orient = "records"))
-result[0] = '{"json":['
-result[-1] = ']'
-result.append('}')
+train_dataset = Dataset.from_pandas(df_train)
+val_dataset = Dataset.from_pandas(df_val)
+test_dataset = Dataset.from_pandas(df_test)
 
-result = ''.join(result)
-result = result.strip('"\'')
-result = json.loads(result)
-with open("Dataset/data-zephyr.json", 'w') as json_file:
-    json.dump(result, json_file)
+health_dataset_dict = DatasetDict({
+    'train': train_dataset,
+    'validation': val_dataset,
+    'test': test_dataset
+})
+# %%
 
-# 2. Preset the the Instruction-based prompt template
-def formatting_func(example):
-    text = f"Question: {example['text']}\n Answer: Please refer to factual information and don't make up fictional data/information. {example['label']}"
-    return text
-
-def generate_and_tokenize_prompt(prompt):
-    return tokenizer(formatting_func(prompt), padding = "max_length", truncation = True, max_length = 2048)
+def print_number_of_trainable_model_parameters(model):
+    trainable_model_params = 0
+    all_model_params = 0
+    for _, param in model.named_parameters():
+        all_model_params += param.numel()
+        if param.requires_grad:
+            trainable_model_params += param.numel()
+    return f"trainable model parameters: {trainable_model_params}\nall model parameters: {all_model_params}\npercentage of trainable model parameters: {100 * trainable_model_params / all_model_params:.2f}%"
 
 # 3. Set the quantization settings
 bnb_config = BitsAndBytesConfig(
@@ -84,6 +95,49 @@ tokenizer = AutoTokenizer.from_pretrained(base_folder + "/zephyr-7B-beta",
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.add_eos_token = True
 
+
+# %%
+# We prefix our tasks with "answer the question"
+prefix = "Please answer this question: "
+# Define the preprocessing function
+def preprocess_function(examples):
+   """Add prefix to the sentences, tokenize the text, and set the labels"""
+   # The "inputs" are the tokenized answer:
+   inputs = [prefix + doc for doc in examples["question"]]
+   model_inputs = tokenizer(inputs, max_length = 128, truncation = True)
+  
+   # The "labels" are the tokenized outputs:
+   labels = tokenizer(text_target = examples["answer"], 
+                      max_length = 512,         
+                      truncation = True)
+
+   model_inputs["labels"] = labels["input_ids"]
+   return model_inputs
+
+# Map the preprocessing function across our dataset
+tokenized_dataset = health_dataset_dict.map(preprocess_function, batched = True)
+
+metric = evaluate.load("rouge")
+
+def compute_metrics(eval_preds):
+   preds, labels = eval_preds
+
+   # decode preds and labels
+   labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+   decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens = True)
+   decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens = True)
+
+   # rougeLSum expects newline after each sentence
+   decoded_preds = ["\n".join(nltk.sent_tokenize(pred.strip())) for pred in decoded_preds]
+   decoded_labels = ["\n".join(nltk.sent_tokenize(label.strip())) for label in decoded_labels]
+
+   result = metric.compute(predictions = decoded_preds, 
+                           references = decoded_labels, 
+                           use_stemmer = True)
+  
+   return result
+
+
 training_arguments = TrainingArguments(
     output_dir = "./Results/zephyr-7B-beta",
     num_train_epochs = 4,
@@ -119,21 +173,32 @@ trainer = SFTTrainer(
 )
 trainer.train()
 
-# 6. Test and compare the non-fine-tuned model against the fine-tuned Phi-2 model
-print(medquad.iloc[2050, :]['text'])
-print(medquad.iloc[2050, :]['label'])
 
-# Fine-tuned Gemma-7b-Instruct model performance
-inputs = tokenizer('''Question: What is (are) Trigeminal Neuralgia ?\n''', return_tensors = 'pt', return_attention_mask = False)
-outputs = model.generate(**inputs, max_length = 200)
-text = tokenizer.batch_decode(outputs[0], skip_special_tokens = True)
-print(''.join(text))
+# %%
+import sacrebleu
+import numpy as np
 
-# Non-Fine-tuned Gemma-7b-Instruct model performance
-torch.set_default_device("cuda")
-model_test = AutoModelForCausalLM.from_pretrained(base_folder + "/zephyr-7B-beta", torch_dtype = "auto")
-tokenizer = AutoTokenizer.from_pretrained(base_folder + "/zephyr-7B-beta", truncation = "max_length", padding = "max_length")
-inputs = tokenizer('''Question: What is (are) Trigeminal Neuralgia ?\n''', return_tensors = 'pt', return_attention_mask = False)
-outputs = model_test.generate(**inputs, max_length = 100)
-text = tokenizer.batch_decode(outputs)[0]
-print(text)
+# Function to compute BLEU scores
+def compute_bleu(preds, labels):
+    decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+    decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+
+    # Prepare references for sacrebleu
+    decoded_labels = [[label] for label in decoded_labels]
+
+    # Compute BLEU score
+    bleu = sacrebleu.corpus_bleu(decoded_preds, decoded_labels)
+
+    return bleu.score
+
+# Assuming you have the trainer object from the previous code
+eval_results = trainer.predict(tokenized_dataset["test"])
+preds = eval_results.predictions
+labels = eval_results.label_ids
+
+# Replace -100 in labels as tokenizer.pad_token_id
+labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+
+# Compute BLEU score
+bleu_score = compute_bleu(preds, labels)
+print(f"BLEU score: {bleu_score}")
